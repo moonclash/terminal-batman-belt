@@ -1,5 +1,3 @@
-#checkout and instantly pull from a branch
-
 gcpull() {
     git checkout "$1"
     git pull
@@ -14,10 +12,6 @@ gcm() {
 
 #checkout to a branch and merge squash your previous branch
 
-gmer() {
-  git checkout "$1"
-  git merge --squash -
-}
 
 gsafe() {
    git branch -D deploy-staging
@@ -25,9 +19,32 @@ gsafe() {
    gcpull deploy-staging
 }
 
-pycharm() {
-    current_file="$1"
-    current_dir=$(pwd)
-    executable=$current_dir$current_file
-    /Applications/Pycharm.app/Contents/MacOS/pycharm $current_dir/$current_file
+#push local to remote
+
+grempush() {
+    git push --set-upstream origin "$1"
+}
+
+gnuke() {
+    for branch in $(git branch | cut -c 3-); do
+	git branch -D $branch
+    done
+}
+
+gkout() {
+    branch_name="$1"
+    git checkout -b $branch_name
+}
+
+docbash() {
+ cont_name="$1"
+ docker container exec -it $cont_name bash
+}
+
+doctest() {
+    docker-compose run -e PYTHONPATH=. pytest -v "$1"
+}
+
+docnuke() {
+    docker system prune -af --volumes
 }
